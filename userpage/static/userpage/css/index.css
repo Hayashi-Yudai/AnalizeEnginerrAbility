@@ -54,7 +54,7 @@ div#score-summary {
 }
 
 div#score-area {
-  margin: 40px 10px 40px 0;
+  margin: 40px 10% 40px 0;
 }
 
 progress {
@@ -83,4 +83,12 @@ span#score-value {
   font-weight: bolder;
   font-family: monospace;
   color: #fff;
+}
+
+div#graph-area {
+  width: 50%;
+}
+
+canvas {
+  width: 100%;
 }

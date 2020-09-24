@@ -8,6 +8,12 @@
       type="text/css"
       href="{% static 'userpage/css/index.css' %}"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script
+      type="text/javascript"
+      src="{% static 'userpage/js/transition_graph.js' %}"
+      defer
+    ></script>
   </head>
   <body>
     <div id="container">
@@ -32,7 +38,9 @@
             <span id="score-value">80</span>
           </div>
         </div>
-        <div id="graph-area"></div>
+        <div id="graph-area">
+          <canvas id="score-transition"></canvas>
+        </div>
       </div>
     </div>
   </body>
