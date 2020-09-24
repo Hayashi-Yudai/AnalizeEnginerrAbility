@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+#header {
+  width: 100%;
+  display: inline-flex;
+  margin-top: 10px;
+}
+
+#title-header {
+  width: 70%;
+}
+
+button.account-button {
+  background: 0;
+  width: 150px;
+  border: 2px solid #e3e3e3;
+  color: #cccccc;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 5px 10px;
+}
+
+button.account-button:hover {
+  border-color: salmon;
+  color: salmon;
+}
+
+button.account-button:focus {
+  border-color: salmon;
+  color: salmon;
+}

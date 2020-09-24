@@ -1,4 +1,29 @@
+{% load static %}
 <html>
-  <head></head>
-  <body>Hello</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>User Page | Application</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'userpage/css/index.css' %}"
+    />
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="title-header"><h1>Application Name</h1></div>
+        <div id="account-setting">
+          <button type="button" class="account-button">Account Setting</button>
+        </div>
+        <div id="header-icon">
+          <img
+            src="{% static 'userpage/media/profile_img.jpg' %}"
+            alt="profile image"
+            height="100%"
+          />
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
