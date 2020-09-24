@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+html {
+  background-color: #f7f7f7;
+}
+
 #container {
   width: 70%;
   margin: 0 auto;
@@ -77,7 +81,7 @@ progress::-moz-progress-bar {
 }
 span#score-value {
   top: -26px;
-  left: 75%;
+  left: 65%;
   position: relative;
   font-size: 1.4em;
   font-weight: bolder;
@@ -91,4 +95,49 @@ div#graph-area {
 
 canvas {
   width: 100%;
+}
+
+ul.cards {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+}
+
+li.cards-item {
+  padding: 1rem;
+}
+
+div.card {
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px 20px;
+}
+
+div.card-title {
+  font-size: 24px;
+  font-weight: 300;
+  margin-bottom: 15px;
+  margin-right: 5%;
+}
+
+div.card-description {
+  color: #808080;
+}
+
+div.card-upper {
+  display: inline-flex;
+}
+
+div.star {
+  display: inline-flex;
+  margin-top: 8px;
+  margin-right: 30px;
+}
+
+p.star-num {
+  margin-left: 5px;
 }

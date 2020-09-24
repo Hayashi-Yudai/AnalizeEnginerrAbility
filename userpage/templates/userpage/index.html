@@ -34,13 +34,47 @@
         <div id="score-summary">
           <h2>Your Scores</h2>
           <div id="score-area">
-            <progress value="80" max="100"></progress>
-            <span id="score-value">80</span>
+            <progress value="70" max="100"></progress>
+            <span id="score-value">70</span>
           </div>
         </div>
         <div id="graph-area">
           <canvas id="score-transition"></canvas>
         </div>
+      </div>
+      <div id="repository-block">
+        <h2>Repositories</h2>
+        <ul class="cards">
+          <li class="card-item">
+            <div class="card">
+              <div class="card-upper">
+                <div class="card-title">ML_models</div>
+                <div class="star">
+                  <p>
+                    <img
+                      src="{% static 'userpage/media/star.svg'%}"
+                      width="20px"
+                    />
+                  </p>
+                  <p class="star-num">3</p>
+                </div>
+                <div class="star">
+                  <p>
+                    <img
+                      src="{% static 'userpage/media/fork.png'%}"
+                      width="22px"
+                    />
+                  </p>
+                  <p class="star-num">4</p>
+                </div>
+              </div>
+              <div class="card-description">
+                Implementation of machine learning models by Python with
+                Tensorflow. ArcFace/UNet/ACoL
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </body>
