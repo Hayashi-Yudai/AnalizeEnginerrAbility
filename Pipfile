@@ -9,6 +9,7 @@ black = "==20.8b"
 
 [packages]
 django = "3.1.1"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
