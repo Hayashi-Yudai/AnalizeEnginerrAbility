@@ -12,6 +12,7 @@
   width: 100%;
   display: inline-flex;
   margin-top: 10px;
+  margin-bottom: 40px;
 }
 
 #title-header {
@@ -37,4 +38,49 @@ button.account-button:hover {
 button.account-button:focus {
   border-color: salmon;
   color: salmon;
+}
+
+div#header-icon {
+  margin-right: 0;
+}
+
+div#score-block {
+  display: inline-flex;
+  width: 100%;
+}
+
+div#score-summary {
+  width: 50%;
+}
+
+div#score-area {
+  margin: 40px 10px 40px 0;
+}
+
+progress {
+  background-color: #f3f3f3;
+  border: 0;
+  height: 1.5em;
+  width: 100%;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #e0eaf0;
+}
+
+progress::-webkit-progress-value {
+  background-color: #329ad1;
+}
+
+progress::-moz-progress-bar {
+  background-color: #329ad1;
+}
+span#score-value {
+  top: -26px;
+  left: 75%;
+  position: relative;
+  font-size: 1.4em;
+  font-weight: bolder;
+  font-family: monospace;
+  color: #fff;
 }
