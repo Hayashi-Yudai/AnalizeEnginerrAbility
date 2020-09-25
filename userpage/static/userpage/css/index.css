@@ -23,6 +23,7 @@ html {
   margin: 0 auto;
 }
 
+/* ヘッダ部分のスタイル */
 #header {
   width: 100%;
   display: inline-flex;
@@ -60,6 +61,7 @@ div#header-icon {
   margin-right: 0;
 }
 
+/* 中段のスコアを可視化する部分のスタイル */
 div#score-block {
   display: inline-flex;
   width: 100%;
@@ -109,6 +111,7 @@ canvas {
   width: 100%;
 }
 
+/* 下段のリポジトリ情報を表示する部分のスタイル */
 ul.cards {
   list-style: none;
   margin: 10px 0;
@@ -154,6 +157,7 @@ p.star-num {
   margin-left: 5px;
 }
 
+/* アカウント設定のためのポップアップ画面のスタイル */
 .popup {
   margin: 70px auto;
   padding: 20px;
