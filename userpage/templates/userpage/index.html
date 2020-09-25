@@ -84,7 +84,10 @@
           <form>
             {% csrf_token %} {{ form.username }}
             <div class="button-area">
-              <a type="button" href="#" class="setting-button ok">OK</a>
+              <label class="setting-button ok">
+                OK
+                <input type="submit" style="display: none" />
+              </label>
               <a type="button" href="#" class="setting-button cancel">Cancel</a>
             </div>
           </form>

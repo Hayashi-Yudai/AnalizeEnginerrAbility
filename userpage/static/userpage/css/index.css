@@ -202,7 +202,7 @@ div.button-area {
   justify-content: flex-end;
 }
 
-a.setting-button {
+.setting-button {
   display: block;
   width: 80px;
   font-weight: bold;
@@ -214,7 +214,7 @@ a.setting-button {
   text-align: center;
 }
 
-a.ok {
+.ok {
   background-color: #27ae60;
   color: white;
 }
