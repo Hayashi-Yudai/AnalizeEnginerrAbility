@@ -3,6 +3,17 @@
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: black;
+}
+
 html {
   background-color: #f7f7f7;
 }
@@ -23,9 +34,10 @@ html {
   width: 70%;
 }
 
-button.account-button {
+a.account-button {
+  display: block;
   background: 0;
-  width: 150px;
+  width: 110px;
   border: 2px solid #e3e3e3;
   color: #cccccc;
   padding: 10px;
@@ -34,12 +46,12 @@ button.account-button {
   margin: 5px 10px;
 }
 
-button.account-button:hover {
+a.account-button:hover {
   border-color: salmon;
   color: salmon;
 }
 
-button.account-button:focus {
+a.account-button:focus {
   border-color: salmon;
   color: salmon;
 }
@@ -140,4 +152,69 @@ div.star {
 
 p.star-num {
   margin-left: 5px;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+h2#setting-title {
+  display: block;
+  margin: 10px 10px 30px 5px;
+}
+
+input#github-account-input {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2c3e50;
+  font-size: 13px;
+}
+
+div.button-area {
+  display: flex;
+  justify-content: flex-end;
+}
+
+a.setting-button {
+  display: block;
+  width: 80px;
+  font-weight: bold;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px;
+  text-align: center;
+}
+
+a.ok {
+  background-color: #27ae60;
+  color: white;
 }

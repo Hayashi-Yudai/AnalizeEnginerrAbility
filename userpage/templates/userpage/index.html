@@ -20,7 +20,9 @@
       <div id="header">
         <div id="title-header"><h1>Application Name</h1></div>
         <div id="account-setting">
-          <button type="button" class="account-button">Account Setting</button>
+          <a type="button" class="account-button" href="#popup1"
+            >Account Setting</a
+          >
         </div>
         <div id="header-icon">
           <img
@@ -75,6 +77,20 @@
             </div>
           </li>
         </ul>
+      </div>
+      <div id="popup1" class="overlay">
+        <div class="popup">
+          <h2 id="setting-title">Account Setting</h2>
+          <input
+            id="github-account-input"
+            type="text"
+            placeholder="GitHub Username"
+          />
+          <div class="button-area">
+            <a type="button" href="#" class="setting-button ok">OK</a>
+            <a type="button" href="#" class="setting-button cancel">Cancel</a>
+          </div>
+        </div>
       </div>
     </div>
   </body>
