@@ -43,9 +43,15 @@ class Index(View):
                 name = repo["name"]
                 star_cnt = repo["stargazers_count"]
                 fork_cnt = repo["forks_count"]
+                description = repo["description"]
 
                 repo_infos.append(
-                    {"name": name, "star_cnt": star_cnt, "fork_cnt": fork_cnt}
+                    {
+                        "name": name,
+                        "star_cnt": star_cnt,
+                        "fork_cnt": fork_cnt,
+                        "description": description,
+                    }
                 )
 
         return repo_infos
