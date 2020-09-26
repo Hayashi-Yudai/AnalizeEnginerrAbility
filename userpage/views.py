@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.views import View
+import os
+import requests
+from requests.auth import HTTPBasicAuth
 from typing import List, Dict, Any
 
 from userpage.forms import AccountSetForm
@@ -24,4 +27,24 @@ class Index(View):
         return render(request, "userpage/index.html", {"form": form})
 
     def get_repositories(self, username: str) -> List[Dict[str, Any]]:
-        pass
+        auth = HTTPBasicAuth(
+            os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
+        )
+
+        data = requests.get(
+            f"https://api.github.com/users/{username}/repos?per_page=500", auth=auth
+        ).json()
+
+        repo_infos = []
+
+        for repo in data:
+            if not repo["fork"]:
+                name = repo["name"]
+                star_cnt = repo["stargazers_count"]
+                fork_cnt = repo["forks_count"]
+
+                repo_infos.append(
+                    {"name": name, "star_cnt": star_cnt, "fork_cnt": fork_cnt}
+                )
+
+        return repo_infos

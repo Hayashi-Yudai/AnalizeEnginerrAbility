@@ -2,7 +2,7 @@ from django.test import Client
 
 from userpage.forms import AccountSetForm
 
-# from userpage.views import Index
+from userpage.views import Index
 
 
 def test_valid_username():
@@ -36,3 +36,26 @@ def test_view_post():
     assert response.status_code == 200
     assert response.context["username"] == "user"
     assert type(response.context["form"]) == AccountSetForm
+
+
+def test_get_repository():
+    view = Index()
+    repos = view.get_repositories("Hayashi-Yudai")
+
+    assert type(repos) == list
+    assert len(repos) > 0
+    assert type(repos[0]) == dict
+
+    this_repository_exist = False
+    star_cnt = -1
+    fork_cnt = -1
+    for repo in repos:
+        if repo["name"] == "AnalyzeEngineerAbility":
+            this_repository_exist = True
+            star_cnt = repo["star_cnt"]
+            fork_cnt = repo["fork_cnt"]
+            break
+
+    assert this_repository_exist
+    assert star_cnt >= 0
+    assert fork_cnt >= 0
