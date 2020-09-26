@@ -1,22 +1,27 @@
-{% load static %} {% for repo in repo_infos %}
-<li class="card-item">
-  <div class="card">
-    <div class="card-upper">
-      <div class="card-title">{{ repo.name }}</div>
-      <div class="star">
-        <p>
-          <img src="{% static 'userpage/media/star.svg' %}" width="20px" />
-        </p>
-        <p class="star-num">{{ repo.star_cnt }}</p>
+{% load static %}
+<ul class="cards">
+  {% for repo in repo_infos %}
+  <li class="card-item">
+    <div class="card">
+      <div class="card-upper">
+        <div class="card-title">{{ repo.name }}</div>
+        <div class="star">
+          <p>
+            <img src="{% static 'userpage/media/star.svg' %}" width="20px" />
+          </p>
+          <p class="star-num">{{ repo.star_cnt }}</p>
+        </div>
+        <div class="star">
+          <p>
+            <img src="{% static 'userpage/media/fork.png' %}" width="22px" />
+          </p>
+          <p class="star-num">{{ repo.fork_cnt }}</p>
+        </div>
       </div>
-      <div class="star">
-        <p>
-          <img src="{% static 'userpage/media/fork.png' %}" width="22px" />
-        </p>
-        <p class="star-num">{{ repo.fork_cnt }}</p>
+      <div class="card-description">
+        {{ repo.description|truncatechars_html:50 }}
       </div>
     </div>
-    <div class="card-description">{{ repo.description }}</div>
-  </div>
-</li>
-{% endfor %}
+  </li>
+  {% endfor %}
+</ul>
