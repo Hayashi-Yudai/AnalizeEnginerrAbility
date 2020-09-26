@@ -11,6 +11,8 @@ pytest-django = "*"
 [packages]
 django = "3.1.1"
 python-dotenv = "*"
+django-dotenv = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
