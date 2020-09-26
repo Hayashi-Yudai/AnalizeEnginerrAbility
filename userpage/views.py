@@ -19,8 +19,9 @@ class Index(View):
 
         if form.is_valid():
             username = data["username"]
+            repo_infos = self.get_repositories(username)
 
-            context = {"form": form, "username": username}
+            context = {"form": form, "username": username, "repo_infos": repo_infos}
 
             return render(request, "userpage/index.html", context)
 

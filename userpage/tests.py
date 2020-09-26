@@ -20,25 +20,7 @@ def test_space_is_invalid():
     assert form.errors["username"][0] == "Do NOT contain any spaces"
 
 
-def test_view_get():
-    c = Client()
-    response = c.get("/userpage/")
-
-    assert response.status_code == 200
-    assert type(response.context["form"]) == AccountSetForm
-    assert "username" not in response.context.keys()
-
-
-def test_view_post():
-    c = Client()
-    response = c.post("/userpage/", {"username": "user"})
-
-    assert response.status_code == 200
-    assert response.context["username"] == "user"
-    assert type(response.context["form"]) == AccountSetForm
-
-
-def test_get_repository():
+def test_get_repository_in_view():
     view = Index()
     repos = view.get_repositories("Hayashi-Yudai")
 
@@ -59,3 +41,24 @@ def test_get_repository():
     assert this_repository_exist
     assert star_cnt >= 0
     assert fork_cnt >= 0
+
+
+def test_view_get():
+    c = Client()
+    response = c.get("/userpage/")
+
+    assert response.status_code == 200
+    assert type(response.context["form"]) == AccountSetForm
+    assert "username" not in response.context.keys()
+
+
+def test_view_post():
+    c = Client()
+    response = c.post("/userpage/", {"username": "user"})
+
+    assert response.status_code == 200
+
+    assert "username" in response.context.keys()
+    assert "repo_infos" in response.context.keys()
+    assert response.context["username"] == "user"
+    assert type(response.context["form"]) == AccountSetForm

@@ -47,10 +47,11 @@
       <div id="repository-block">
         <h2>Repositories</h2>
         <ul class="cards">
+          {% for repo in repo_infos %} 
           <li class="card-item">
             <div class="card">
               <div class="card-upper">
-                <div class="card-title">ML_models</div>
+                <div class="card-title">{{ repo.name }}</div>
                 <div class="star">
                   <p>
                     <img
@@ -58,7 +59,7 @@
                       width="20px"
                     />
                   </p>
-                  <p class="star-num">3</p>
+                  <p class="star-num">{{ repo.star_cnt }} </p>
                 </div>
                 <div class="star">
                   <p>
@@ -67,7 +68,7 @@
                       width="22px"
                     />
                   </p>
-                  <p class="star-num">4</p>
+                  <p class="star-num">{{ repo.fork_cnt }}</p>
                 </div>
               </div>
               <div class="card-description">
@@ -76,6 +77,7 @@
               </div>
             </div>
           </li>
+          {% endfor %}
         </ul>
       </div>
       <!--GitHubアカウントを登録するためのポップアップ画面-->

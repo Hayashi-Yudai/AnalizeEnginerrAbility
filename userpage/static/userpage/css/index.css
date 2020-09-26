@@ -130,6 +130,7 @@ div.card {
   flex-direction: column;
   overflow: hidden;
   padding: 10px 20px;
+  margin: 15px 0;
 }
 
 div.card-title {
