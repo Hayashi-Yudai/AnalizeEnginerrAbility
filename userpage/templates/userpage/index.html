@@ -36,8 +36,10 @@
         <div id="score-summary">
           <h2>Your Scores</h2>
           <div id="score-area">
-            <progress value="70" max="100"></progress>
-            <span id="score-value">70</span>
+            <progress value="{{ total_score }}" max="100"></progress>
+            <span id="score-value" style="left:{{ total_score }}%;"
+              >{{ total_score }}</span
+            >
           </div>
         </div>
         <div id="graph-area">
@@ -48,22 +50,7 @@
         <h2>Repositories</h2>
         {% include 'userpage/repository-card.html' %}
       </div>
-      <!--GitHubアカウントを登録するためのポップアップ画面-->
-      <div id="popup1" class="overlay">
-        <div class="popup">
-          <h2 id="setting-title">Account Setting</h2>
-          <form method="post">
-            {% csrf_token %} {{ form.username }}
-            <div class="button-area">
-              <label class="setting-button ok">
-                OK
-                <input type="submit" style="display: none" />
-              </label>
-              <a type="button" href="#" class="setting-button cancel">Cancel</a>
-            </div>
-          </form>
-        </div>
-      </div>
+      {% include 'userpage/account-setting-popup.html' %}
     </div>
   </body>
 </html>

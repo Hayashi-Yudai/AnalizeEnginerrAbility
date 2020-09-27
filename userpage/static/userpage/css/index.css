@@ -95,7 +95,7 @@ progress::-moz-progress-bar {
 }
 span#score-value {
   top: -26px;
-  left: 65%;
+  /*left: 65%;*/
   position: relative;
   font-size: 1.4em;
   font-weight: bolder;
