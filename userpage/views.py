@@ -10,7 +10,7 @@ from userpage.forms import AccountSetForm
 
 class Index(View):
     def get(self, request, *args, **kwargs):
-        context = {"form": AccountSetForm()}
+        context = {"form": AccountSetForm(), "total_score": 50}
         return render(request, "userpage/index.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -21,11 +21,16 @@ class Index(View):
             username = data["username"]
             repo_infos = self.get_repositories(username)
 
-            context = {"form": form, "username": username, "repo_infos": repo_infos}
+            context = {
+                "form": form,
+                "username": username,
+                "repo_infos": repo_infos,
+                "total_score": 50,
+            }
 
             return render(request, "userpage/index.html", context)
 
-        return render(request, "userpage/index.html", {"form": form})
+        return render(request, "userpage/index.html", {"form": form, "total_score": 50})
 
     def get_repositories(self, username: str) -> List[Dict[str, Any]]:
         auth = HTTPBasicAuth(
