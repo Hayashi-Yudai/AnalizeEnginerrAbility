@@ -11,7 +11,7 @@ from userpage.forms import AccountSetForm
 
 class Index(View):
     def get(self, request, *args, **kwargs):
-        context = {"form": AccountSetForm(), "star_score": 50}
+        context = {"form": AccountSetForm(), "star_score": 50.00, "star_score_posi": 40}
         return render(request, "userpage/index.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -20,6 +20,8 @@ class Index(View):
 
         if form.is_valid():
             username = data["username"]
+
+            # TODO: リクエストの並列化
             repo_infos = self.get_repositories(username)
             star_score = self.calc_star_score(username)
 
@@ -28,20 +30,27 @@ class Index(View):
                 "username": username,
                 "repo_infos": repo_infos,
                 "star_score": star_score,
+                "star_score_posi": star_score - 10.00,
             }
 
             return render(request, "userpage/index.html", context)
 
-        return render(request, "userpage/index.html", {"form": form, "total_score": 50})
+        return render(
+            request,
+            "userpage/index.html",
+            {"form": form, "star_score": 50.00, "star_score_posi": 40},
+        )
 
-    def get_repositories(self, username: str) -> List[Dict[str, Any]]:
+    def _fetch_json_from_api(self, endpoint: str) -> Dict[str, Any]:
         auth = HTTPBasicAuth(
             os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
         )
+        base_url = "https://api.github.com/"
 
-        data = requests.get(
-            f"https://api.github.com/users/{username}/repos?per_page=500", auth=auth
-        ).json()
+        return requests.get(base_url + endpoint, auth=auth).json()
+
+    def get_repositories(self, username: str) -> List[Dict[str, Any]]:
+        data = self._fetch_json_from_api(f"users/{username}/repos?per_page=500")
 
         repo_infos = []
 
@@ -63,14 +72,8 @@ class Index(View):
 
         return repo_infos
 
-    def calc_star_score(self, username: str) -> float:
-        auth = HTTPBasicAuth(
-            os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
-        )
-
-        user_info = requests.get(
-            f"https://api.github.com/users/{username}", auth=auth
-        ).json()
+    def _calc_elapsed_days(self, username: str) -> int:
+        user_info = self._fetch_json_from_api(f"users/{username}")
 
         account_created_at = datetime.strptime(
             user_info["created_at"], "%Y-%m-%dT%H:%M:%SZ"
@@ -81,20 +84,29 @@ class Index(View):
 
         elapsed_days = (last_updated_at - account_created_at).days
 
+        return elapsed_days
+
+    def _calc_star_count(self, username: str) -> int:
         star_count = 0
         page = 1
 
+        # TODO: 二分探索したら効率的になる？
         while True:
-            star_repositories = requests.get(
-                f"https://api.github.com/users/{username}/starred?per_page=100&page={page}",
-                auth=auth,
-            ).json()
+            star_repositories = self._fetch_json_from_api(
+                f"users/{username}/starred?per_page=100&page={page}"
+            )
 
             if len(star_repositories) == 0:
                 break
 
             page += 1
             star_count += len(star_repositories)
+
+        return star_count
+
+    def calc_star_score(self, username: str) -> float:
+        elapsed_days = self._calc_elapsed_days(username)
+        star_count = self._calc_star_count(username)
 
         bias = 1000 if elapsed_days < 1000 else 0
         star_per_day_biased = star_count / (elapsed_days + bias)
