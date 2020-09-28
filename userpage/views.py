@@ -2,16 +2,19 @@ from datetime import datetime
 from django.shortcuts import render
 from django.views import View
 import os
-import requests
-from requests.auth import HTTPBasicAuth
 from typing import List, Dict, Any
 
 from userpage.forms import AccountSetForm
+from userpage.github_api import GitHubAPI
 
 
 class Index(View):
     def __init__(self, *args, **kwargs):
         super(Index, self).__init__(*args, **kwargs)
+
+        self.api = GitHubAPI(
+            os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
+        )
         self.default_context = {
             "form": AccountSetForm(),
             "star_score": 50.00,
@@ -52,16 +55,8 @@ class Index(View):
 
         return render(request, "userpage/index.html", self.default_context)
 
-    def _fetch_json_from_api(self, endpoint: str) -> Dict[str, Any]:
-        auth = HTTPBasicAuth(
-            os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
-        )
-        base_url = "https://api.github.com/"
-
-        return requests.get(base_url + endpoint, auth=auth).json()
-
     def get_repositories(self, username: str) -> List[Dict[str, Any]]:
-        data = self._fetch_json_from_api(f"users/{username}/repos?per_page=500")
+        data = self.api.get_rest(f"users/{username}/repos?per_page=500")
 
         repo_infos = []
 
@@ -84,7 +79,7 @@ class Index(View):
         return repo_infos
 
     def _calc_elapsed_days(self, username: str) -> int:
-        user_info = self._fetch_json_from_api(f"users/{username}")
+        user_info = self.api.get_rest(f"users/{username}")
 
         account_created_at = datetime.strptime(
             user_info["created_at"], "%Y-%m-%dT%H:%M:%SZ"
@@ -103,7 +98,7 @@ class Index(View):
 
         # TODO: 二分探索したら効率的になる？
         while True:
-            star_repositories = self._fetch_json_from_api(
+            star_repositories = self.api.get_rest(
                 f"users/{username}/starred?per_page=100&page={page}"
             )
 
@@ -116,11 +111,8 @@ class Index(View):
         return star_count
 
     def _fetch_issue_count(self, username: str) -> int:
-        headers = {"Authorization": f"Bearer {os.environ.get('GITHUB_TOKEN')}"}
         query = '{ user(login: "' + username + '") { issues(first:10) { totalCount }}}'
-        response = requests.post(
-            "https://api.github.com/graphql", json={"query": query}, headers=headers
-        ).json()
+        response = self.api.post_graphql(query)
 
         return response["data"]["user"]["issues"]["totalCount"]
 
