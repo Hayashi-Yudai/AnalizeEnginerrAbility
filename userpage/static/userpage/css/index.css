@@ -76,23 +76,47 @@ div#score-area {
 }
 
 progress {
-  background-color: #f3f3f3;
   border: 0;
   height: 1.5em;
   width: 100%;
 }
 
-progress::-webkit-progress-bar {
+progress#star-score::-webkit-progress-bar {
   background-color: #e0eaf0;
 }
 
-progress::-webkit-progress-value {
+progress#star-score::-webkit-progress-value {
   background-color: #329ad1;
 }
 
-progress::-moz-progress-bar {
+progress#star-score::-moz-progress-bar {
   background-color: #329ad1;
 }
+
+progress#issue-score::-webkit-progress-bar {
+  background-color: #ffe4e1;
+}
+
+progress#issue-score::-webkit-progress-value {
+  background-color: #cd5c5c;
+}
+
+progress#issue-score::-moz-progress-bar {
+  background-color: #cd5c5c;
+}
+
+progress#pr-score::-webkit-progress-bar {
+  background-color: #bce2e8;
+}
+
+progress#pr-score::-webkit-progress-value {
+  background-color: #00a497;
+}
+
+progress#pr-score::-moz-progress-bar {
+  background-color: #ff82b2;
+}
+
 span#score-value {
   top: -26px;
   /*left: 65%;*/
