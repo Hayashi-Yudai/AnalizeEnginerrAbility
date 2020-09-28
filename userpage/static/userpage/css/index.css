@@ -43,7 +43,7 @@ a.account-button {
   color: #cccccc;
   padding: 10px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 0.75rem;
   margin: 5px 10px;
 }
 
@@ -118,8 +118,7 @@ progress#pr-score::-moz-progress-bar {
 }
 
 span#score-value {
-  top: -26px;
-  /*left: 65%;*/
+  top: -1.3rem;
   position: relative;
   font-size: 1.4em;
   font-weight: bolder;
