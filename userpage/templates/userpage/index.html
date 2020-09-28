@@ -41,6 +41,12 @@
               >{{ star_score }}</span
             >
           </div>
+          <div id="score-area">
+            <progress value="{{ issue_score }}" max="100"></progress>
+            <span id="score-value" style="left:{{ issue_score_posi }}%;"
+              >{{ issue_score }}</span
+            >
+          </div>
         </div>
         <div id="graph-area">
           <canvas id="score-transition"></canvas>

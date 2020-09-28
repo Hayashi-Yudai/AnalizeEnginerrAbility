@@ -10,11 +10,22 @@ from userpage.forms import AccountSetForm
 
 
 class Index(View):
+    def __init__(self, *args, **kwargs):
+        super(Index, self).__init__(*args, **kwargs)
+        self.default_context = {
+            "form": AccountSetForm(),
+            "star_score": 50.00,
+            "star_score_posi": 40,
+            "issue_score": 50.00,
+            "issue_score_posi": 40,
+        }
+
     def get(self, request, *args, **kwargs):
-        context = {"form": AccountSetForm(), "star_score": 50.00, "star_score_posi": 40}
-        return render(request, "userpage/index.html", context)
+        """ Inherit method from View """
+        return render(request, "userpage/index.html", self.default_context)
 
     def post(self, request, *args, **kwargs):
+        """ Inherit method from View """
         data = request.POST
         form = AccountSetForm(data)
 
@@ -22,8 +33,10 @@ class Index(View):
             username = data["username"]
 
             # TODO: リクエストの並列化
+            elapsed_days = self._calc_elapsed_days(username)
             repo_infos = self.get_repositories(username)
-            star_score = self.calc_star_score(username)
+            star_score = self.calc_star_score(username, elapsed_days)
+            issue_score = self.calc_issue_score(username, elapsed_days)
 
             context = {
                 "form": form,
@@ -31,15 +44,13 @@ class Index(View):
                 "repo_infos": repo_infos,
                 "star_score": star_score,
                 "star_score_posi": star_score - 10.00,
+                "issue_score": issue_score,
+                "issue_score_posi": issue_score - 10.00,
             }
 
             return render(request, "userpage/index.html", context)
 
-        return render(
-            request,
-            "userpage/index.html",
-            {"form": form, "star_score": 50.00, "star_score_posi": 40},
-        )
+        return render(request, "userpage/index.html", self.default_context)
 
     def _fetch_json_from_api(self, endpoint: str) -> Dict[str, Any]:
         auth = HTTPBasicAuth(
@@ -104,14 +115,43 @@ class Index(View):
 
         return star_count
 
-    def calc_star_score(self, username: str) -> float:
-        elapsed_days = self._calc_elapsed_days(username)
+    def _fetch_issue_count(self, username: str) -> int:
+        headers = {"Authorization": f"Bearer {os.environ.get('GITHUB_TOKEN')}"}
+        query = '{ user(login: "' + username + '") { issues(first:10) { totalCount }}}'
+        response = requests.post(
+            "https://api.github.com/graphql", json={"query": query}, headers=headers
+        ).json()
+
+        return response["data"]["user"]["issues"]["totalCount"]
+
+    def calc_deviation_value(self, val: float, mean: float, stdev: float) -> float:
+        dev_val = (val - mean) / stdev * 10 + 50
+        dev_val = int(dev_val * 100) / 100
+
+        return min(dev_val, 100)
+
+    def calc_star_score(self, username: str, elapsed_days: int) -> float:
+        """
+        Calculate Deviation value
+        """
         star_count = self._calc_star_count(username)
 
         bias = 1000 if elapsed_days < 1000 else 0
         star_per_day_biased = star_count / (elapsed_days + bias)
 
-        deviation_val = (star_per_day_biased - 0.02862) / 0.1257 * 10 + 50
-        deviation_val = int(deviation_val * 100) / 100
+        return self.calc_deviation_value(
+            star_per_day_biased, mean=0.02862, stdev=0.1257
+        )
 
-        return min(deviation_val, 100)
+    def calc_issue_score(self, username: str, elapsed_days: int) -> float:
+        """
+        Calculate Deviation value
+        """
+        issue_count = self._fetch_issue_count(username)
+
+        bias = 1000 if elapsed_days < 1000 else 0
+        issue_per_day_biased = issue_count / (elapsed_days + bias)
+
+        return self.calc_deviation_value(
+            issue_per_day_biased, mean=0.01043, stdev=0.04264
+        )
