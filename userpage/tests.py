@@ -1,8 +1,9 @@
 from django.test import Client
+import pytest
 
 from userpage.forms import AccountSetForm
-
 from userpage.views import Index
+from userpage.github_api import GitHubAPI
 
 
 def test_valid_username():
@@ -62,3 +63,18 @@ def test_view_post():
     assert "repo_infos" in response.context.keys()
     assert response.context["username"] == "user"
     assert type(response.context["form"]) == AccountSetForm
+
+
+def test_github_api_attributes():
+    api = GitHubAPI()
+    with pytest.raises(PermissionError):
+        _ = api.username
+
+    with pytest.raises(PermissionError):
+        _ = api.token
+
+    with pytest.raises(TypeError):
+        api.username = ""
+
+    with pytest.raises(TypeError):
+        api.token = ""
