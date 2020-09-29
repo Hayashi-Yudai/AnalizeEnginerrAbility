@@ -46,9 +46,9 @@ class Index(View):
                 "username": username,
                 "repo_infos": repo_infos,
                 "star_score": star_score,
-                "star_score_posi": star_score - 10.00,
+                "star_score_posi": star_score - 13.00,
                 "issue_score": issue_score,
-                "issue_score_posi": issue_score - 10.00,
+                "issue_score_posi": issue_score - 13.00,
             }
 
             return render(request, "userpage/index.html", context)
