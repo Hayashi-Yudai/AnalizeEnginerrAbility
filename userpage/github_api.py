@@ -5,6 +5,8 @@ import os
 
 
 class GitHubAPI:
+    """Request to the GitHub API"""
+
     def __init__(self):
         self.__username = os.environ.get("API_USERNAME")
         self.__token = os.environ.get("API_TOKEN")
@@ -36,6 +38,21 @@ class GitHubAPI:
         return
 
     def get_rest(self, endpoint: str):
+        """
+        Send GET request to the REST API
+
+        Parameter
+        ---------
+        endpoint : str
+            the endpoint of the API. https://api.github.com/$ENDPOINT
+
+        Returns
+        -------
+        dict or list
+            the type of return value is different in each endpoint
+            user/ -> dict
+            user/$USERNAME/repos -> list
+        """
         auth = HTTPBasicAuth(username=self.__username, password=self.__token)
         response = requests.get(self.rest_base + endpoint, auth=auth)
 
@@ -45,6 +62,20 @@ class GitHubAPI:
         return response.json()
 
     def post_graphql(self, query: str) -> Dict[str, Any]:
+        """
+        Send POST request to the GraphQL API
+
+        Parameters
+        ----------
+        query : str
+            the GraphQL query. For the query format, see
+            https://developer.github.com/v4/
+
+        Returns
+        -------
+        dict
+            returned dict has one key "data" and contains all in its value
+        """
         header = {"Authorization": f"Bearer {self.__token}"}
         response = requests.post(
             self.graphql_url, json={"query": query}, headers=header
