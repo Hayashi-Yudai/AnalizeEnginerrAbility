@@ -12,9 +12,7 @@ class Index(View):
     def __init__(self, *args, **kwargs):
         super(Index, self).__init__(*args, **kwargs)
 
-        self.api = GitHubAPI(
-            os.environ.get("API_USERNAME"), os.environ.get("API_TOKEN")
-        )
+        self.api = GitHubAPI()
         self.default_context = {
             "form": AccountSetForm(),
             "star_score": 50.00,

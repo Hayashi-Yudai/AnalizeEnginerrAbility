@@ -1,17 +1,18 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from requests.auth import HTTPBasicAuth
 import requests
+import os
 
 
 class GitHubAPI:
-    def __init__(self, username: str, token: str):
-        self.username = username
-        self.token = token
+    def __init__(self):
+        self._username = os.environ.get("API_USERNAME")
+        self._token = os.environ.get("API_TOKEN")
         self.rest_base = "https://api.github.com/"
         self.graphql_url = "https://api.github.com/graphql"
 
     def get_rest(self, endpoint: str):
-        auth = HTTPBasicAuth(username=self.username, password=self.token)
+        auth = HTTPBasicAuth(username=self._username, password=self._token)
         response = requests.get(self.rest_base + endpoint, auth=auth)
 
         if response.status_code != 200:
@@ -20,7 +21,7 @@ class GitHubAPI:
         return response.json()
 
     def post_graphql(self, query: str) -> Dict[str, Any]:
-        header = {"Authorization": f"Bearer {self.token}"}
+        header = {"Authorization": f"Bearer {self._token}"}
         response = requests.post(
             self.graphql_url, json={"query": query}, headers=header
         )
