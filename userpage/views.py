@@ -93,21 +93,14 @@ class Index(View):
         return elapsed_days
 
     def _calc_star_count(self, username: str) -> int:
-        star_count = 0
-        page = 1
-
-        # TODO: 二分探索したら効率的になる？
-        # TODO: graphql 使ったらtotalCountで取れる？
-        while True:
-            star_repositories = self.api.get_rest(
-                f"users/{username}/starred?per_page=100&page={page}"
-            )
-
-            if len(star_repositories) == 0:
-                break
-
-            page += 1
-            star_count += len(star_repositories)
+        query = (
+            "{ user(login:"
+            + f'"{username}"'
+            + ") { starredRepositories { totalCount } } }"
+        )
+        star_count = self.api.post_graphql(query)["data"]["user"][
+            "starredRepositories"
+        ]["totalCount"]
 
         return star_count
 
@@ -123,14 +116,13 @@ class Index(View):
 
         return min(dev_val, 100)
 
-    def calc_biased_deviation_value(self, count: int, mean: float, stdev: float, elapsed_days: int) -> float:
+    def calc_biased_deviation_value(
+        self, count: int, mean: float, stdev: float, elapsed_days: int
+    ) -> float:
         bias = 1000 if elapsed_days < 1000 else 0
         star_per_day_biased = count / (elapsed_days + bias)
 
-        return self.calc_deviation_value(
-            star_per_day_biased, mean=mean, stdev=stdev
-        )
-
+        return self.calc_deviation_value(star_per_day_biased, mean=mean, stdev=stdev)
 
     def calc_star_score(self, username: str, elapsed_days: int) -> float:
         """
@@ -138,7 +130,9 @@ class Index(View):
         """
         star_count = self._calc_star_count(username)
 
-        return self.calc_biased_deviation_value(star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days)
+        return self.calc_biased_deviation_value(
+            star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days
+        )
 
     def calc_issue_score(self, username: str, elapsed_days: int) -> float:
         """
@@ -146,4 +140,6 @@ class Index(View):
         """
         issue_count = self._fetch_issue_count(username)
 
-        return self.calc_biased_deviation_value(issue_count, mean=0.01043, stdev=0.04264, elapsed_days=elapsed_days)
+        return self.calc_biased_deviation_value(
+            issue_count, mean=0.01043, stdev=0.04264, elapsed_days=elapsed_days
+        )
