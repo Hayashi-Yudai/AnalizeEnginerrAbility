@@ -10,12 +10,12 @@ class GitHubAPI:
         self.rest_base = "https://api.github.com/"
         self.graphql_url = "https://api.github.com/graphql"
 
-    def get_rest(self, endpoint: str) -> Dict[str, Any]:
+    def get_rest(self, endpoint: str):
         auth = HTTPBasicAuth(username=self.username, password=self.token)
         response = requests.get(self.rest_base + endpoint, auth=auth)
 
         if response.status_code != 200:
-            return dict()
+            return []
 
         return response.json()
 

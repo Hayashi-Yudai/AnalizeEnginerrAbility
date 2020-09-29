@@ -56,7 +56,9 @@ class Index(View):
         return render(request, "userpage/index.html", self.default_context)
 
     def get_repositories(self, username: str) -> List[Dict[str, Any]]:
-        data = self.api.get_rest(f"users/{username}/repos?per_page=500")
+        data: List[Dict[str, Any]] = self.api.get_rest(
+            f"users/{username}/repos?per_page=500"
+        )
 
         repo_infos = []
 
@@ -79,7 +81,7 @@ class Index(View):
         return repo_infos
 
     def _calc_elapsed_days(self, username: str) -> int:
-        user_info = self.api.get_rest(f"users/{username}")
+        user_info: Dict[str, Any] = self.api.get_rest(f"users/{username}")
 
         account_created_at = datetime.strptime(
             user_info["created_at"], "%Y-%m-%dT%H:%M:%SZ"
@@ -110,7 +112,8 @@ class Index(View):
 
         return response["data"]["user"]["issues"]["totalCount"]
 
-    def calc_deviation_value(self, val: float, mean: float, stdev: float) -> float:
+    @staticmethod
+    def calc_deviation_value(val: float, mean: float, stdev: float) -> float:
         dev_val = (val - mean) / stdev * 10 + 50
         dev_val = int(dev_val * 100) / 100
 
