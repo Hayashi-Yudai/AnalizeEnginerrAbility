@@ -9,6 +9,8 @@ black = "==20.8b"
 pytest-django = "6.0.2"
 jupyter = "*"
 ipython = "*"
+seaborn = "*"
+tqdm = "*"
 
 [packages]
 django = "3.1.1"
