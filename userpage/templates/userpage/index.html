@@ -37,24 +37,42 @@
           <h2>Your Scores</h2>
           <div id="score-area">
             <p>Star Score</p>
-            <progress id="star-score" value="{{ star_score }}" max="100"></progress>
-            <span id="score-value" style="left:{{ star_score_posi }}%;"
-              >{{ star_score }}</span
-            >
+            <div style="position: relative">
+              <progress
+                id="star-score"
+                value="{{ star_score }}"
+                max="100"
+              ></progress>
+              <span id="score-value" style="left:{{ star_score_posi }}%;"
+                >{{ star_score }}</span
+              >
+            </div>
           </div>
           <div id="score-area">
             <p>Issue Score</p>
-            <progress id="issue-score"value="{{ issue_score }}" max="100"></progress>
-            <span id="score-value" style="left:{{ issue_score_posi }}%;"
-              >{{ issue_score }}</span
-            >
+            <div style="position: relative">
+              <progress
+                id="issue-score"
+                value="{{ issue_score }}"
+                max="100"
+              ></progress>
+              <span id="score-value" style="left:{{ issue_score_posi }}%;"
+                >{{ issue_score }}</span
+              >
+            </div>
           </div>
           <div id="score-area">
             <p>Pull Request Score</p>
-            <progress id="pr-score" value="{{ issue_score }}" max="100"></progress>
-            <span id="score-value" style="left:{{ issue_score_posi }}%;"
-              >{{ issue_score }}</span
-            >
+            <div style="position: relative">
+              <progress
+                id="pr-score"
+                value="{{ issue_score }}"
+                max="100"
+              ></progress>
+              <span id="score-value" style="left:{{ issue_score_posi }}%;"
+                >{{ issue_score }}</span
+              >
+            </div>
           </div>
         </div>
         <div id="graph-area">

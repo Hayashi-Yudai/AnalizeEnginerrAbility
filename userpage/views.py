@@ -97,6 +97,7 @@ class Index(View):
         page = 1
 
         # TODO: 二分探索したら効率的になる？
+        # TODO: graphql 使ったらtotalCountで取れる？
         while True:
             star_repositories = self.api.get_rest(
                 f"users/{username}/starred?per_page=100&page={page}"
@@ -122,18 +123,22 @@ class Index(View):
 
         return min(dev_val, 100)
 
+    def calc_biased_deviation_value(self, count: int, mean: float, stdev: float, elapsed_days: int) -> float:
+        bias = 1000 if elapsed_days < 1000 else 0
+        star_per_day_biased = count / (elapsed_days + bias)
+
+        return self.calc_deviation_value(
+            star_per_day_biased, mean=mean, stdev=stdev
+        )
+
+
     def calc_star_score(self, username: str, elapsed_days: int) -> float:
         """
         Calculate Deviation value
         """
         star_count = self._calc_star_count(username)
 
-        bias = 1000 if elapsed_days < 1000 else 0
-        star_per_day_biased = star_count / (elapsed_days + bias)
-
-        return self.calc_deviation_value(
-            star_per_day_biased, mean=0.02862, stdev=0.1257
-        )
+        return self.calc_biased_deviation_value(star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days)
 
     def calc_issue_score(self, username: str, elapsed_days: int) -> float:
         """
@@ -141,9 +146,4 @@ class Index(View):
         """
         issue_count = self._fetch_issue_count(username)
 
-        bias = 1000 if elapsed_days < 1000 else 0
-        issue_per_day_biased = issue_count / (elapsed_days + bias)
-
-        return self.calc_deviation_value(
-            issue_per_day_biased, mean=0.01043, stdev=0.04264
-        )
+        return self.calc_biased_deviation_value(issue_count, mean=0.01043, stdev=0.04264, elapsed_days=elapsed_days)
