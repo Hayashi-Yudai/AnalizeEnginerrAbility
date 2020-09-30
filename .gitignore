@@ -3,5 +3,6 @@
 *.pyc
 .idea
 .ipynb_checkpoints
+*.svg
 db.sqlite3
 Pipfile.lock
