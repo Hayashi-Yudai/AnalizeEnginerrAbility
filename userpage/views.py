@@ -200,8 +200,8 @@ class Index(View):
             ):
                 own_pr_num += 1
 
-        own_pr_ratio = own_pr_num / merged_pr_num
-        merged_ratio = merged_pr_num / pull_request_num
+        own_pr_ratio = own_pr_num / (merged_pr_num + 1)
+        merged_ratio = merged_pr_num / (pull_request_num + 1)
         if own_pr_ratio < 0.8:
             score = self.calc_deviation_value(merged_ratio, mean=0.719, stdev=0.168)
         else:
