@@ -1,89 +1,92 @@
 {% load static %}
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8"/>
     <title>User Page | SignPost</title>
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'userpage/css/index.css' %}"
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'userpage/css/index.css' %}"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script
-      type="text/javascript"
-      src="{% static 'userpage/js/transition_graph.js' %}"
-      defer
+            type="text/javascript"
+            src="{% static 'userpage/js/transition_graph.js' %}"
+            defer
     ></script>
-  </head>
-  <body>
-    <div id="container">
-      <div id="header">
+</head>
+<body>
+<div id="container">
+    <div id="header">
         <div id="title-header"><h1>SignPost</h1></div>
         <div id="account-setting">
-          <a type="button" class="account-button" href="#popup1"
+            <a type="button" class="account-button" href="#popup1"
             >Account Setting</a
-          >
+            >
         </div>
         <div id="header-icon">
+            <!--
           <img
             src="{% static 'userpage/media/profile_img.jpg' %}"
             alt="profile image"
             height="100%"
           />
+          -->
+            <img src="{{ profile_img }}" alt="profile image" height="100%"/>
         </div>
-      </div>
-      <div id="score-block">
+    </div>
+    <div id="score-block">
         <div id="score-summary">
-          <h2>Your Scores</h2>
-          <div id="score-area">
-            <p>サーチ力</p>
-            <div style="position: relative">
-              <progress
-                id="star-score"
-                value="{{ star_score }}"
-                max="100"
-              ></progress>
-              <span id="score-value" style="left:{{ star_score_posi }}%;"
-                >{{ star_score }}</span
-              >
+            <h2>Your Scores</h2>
+            <div id="score-area">
+                <p>サーチ力</p>
+                <div style="position: relative">
+                    <progress
+                            id="star-score"
+                            value="{{ star_score }}"
+                            max="100"
+                    ></progress>
+                    <span id="score-value" style="left:{{ star_score_posi }}%;"
+                    >{{ star_score }}</span
+                    >
+                </div>
             </div>
-          </div>
-          <div id="score-area">
-            <p>課題発見力</p>
-            <div style="position: relative">
-              <progress
-                id="issue-score"
-                value="{{ issue_score }}"
-                max="100"
-              ></progress>
-              <span id="score-value" style="left:{{ issue_score_posi }}%;"
-                >{{ issue_score }}</span
-              >
+            <div id="score-area">
+                <p>課題発見力</p>
+                <div style="position: relative">
+                    <progress
+                            id="issue-score"
+                            value="{{ issue_score }}"
+                            max="100"
+                    ></progress>
+                    <span id="score-value" style="left:{{ issue_score_posi }}%;"
+                    >{{ issue_score }}</span
+                    >
+                </div>
             </div>
-          </div>
-          <div id="score-area">
-            <p>課題解決力</p>
-            <div style="position: relative">
-              <progress
-                id="pr-score"
-                value="{{ pr_score }}"
-                max="100"
-              ></progress>
-              <span id="score-value" style="left:{{ pr_score_posi }}%;"
-                >{{ pr_score }}</span
-              >
+            <div id="score-area">
+                <p>課題解決力</p>
+                <div style="position: relative">
+                    <progress
+                            id="pr-score"
+                            value="{{ pr_score }}"
+                            max="100"
+                    ></progress>
+                    <span id="score-value" style="left:{{ pr_score_posi }}%;"
+                    >{{ pr_score }}</span
+                    >
+                </div>
             </div>
-          </div>
         </div>
         <div id="graph-area">
           <canvas id="score-transition"></canvas>
         </div>
-      </div>
-      <div id="repository-block">
+    </div>
+    <div id="repository-block">
         <h2>Repositories</h2>
         {% include 'userpage/repository-card.html' %}
-      </div>
-      {% include 'userpage/account-setting-popup.html' %}
     </div>
-  </body>
+    {% include 'userpage/account-setting-popup.html' %}
+</div>
+</body>
 </html>

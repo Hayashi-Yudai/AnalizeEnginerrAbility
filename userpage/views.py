@@ -18,8 +18,9 @@ class Index(View):
             "star_score_posi": 40,
             "issue_score": 50.00,
             "issue_score_posi": 40,
-            "pr_score": 50,
+            "pr_score": 50.0,
             "pr_score_posi": 40,
+            "profile_img": "../../static/userpage/media/default_profile_img.png",
         }
 
     def get(self, request, *args, **kwargs):
@@ -35,6 +36,7 @@ class Index(View):
             username = data["username"]
 
             # TODO: リクエストの並列化
+            profile_img = self.fetch_profile_img(username)
             elapsed_days = self._calc_elapsed_days(username)
             repo_infos = self.get_repositories(username)
             star_score = self.calc_star_score(username, elapsed_days)
@@ -51,11 +53,18 @@ class Index(View):
                 "issue_score_posi": issue_score - 13.00,
                 "pr_score": pull_request_score,
                 "pr_score_posi": pull_request_score - 13.00,
+                "profile_img": profile_img,
             }
 
             return render(request, "userpage/index.html", context)
 
         return render(request, "userpage/index.html", self.default_context)
+
+    def fetch_profile_img(self, username):
+        query = "{ user(login:" + f'"{username}"' + ") { avatarUrl }}"
+        avatar_url = self.api.post_graphql(query)["data"]["user"]["avatarUrl"]
+
+        return avatar_url
 
     def get_repositories(self, username: str) -> List[Dict[str, Any]]:
         data: List[Dict[str, Any]] = self.api.get_rest(
