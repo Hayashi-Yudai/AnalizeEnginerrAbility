@@ -143,7 +143,7 @@ class Index(View):
         elapsed_days = (last_updated_at - account_created_at).days
         self.user_infos["elapsed_days"] = elapsed_days
 
-    def _calc_star_count(self, username: str) -> int:
+    def _fetch_star_count(self, username: str) -> int:
         query = (
             "{ user(login:"
             + f'"{username}"'
@@ -180,7 +180,7 @@ class Index(View):
         """
         Calculate Deviation value
         """
-        star_count = self._calc_star_count(username)
+        star_count = self._fetch_star_count(username)
 
         self.user_infos["star_score"] = self.calc_biased_deviation_value(
             star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days
