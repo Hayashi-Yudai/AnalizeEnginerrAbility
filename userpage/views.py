@@ -1,6 +1,8 @@
+from collections import defaultdict
 from datetime import datetime
 from django.shortcuts import render
 from django.views import View
+import threading
 from typing import List, Dict, Any
 
 from userpage.forms import AccountSetForm
@@ -15,14 +17,15 @@ class Index(View):
         self.default_context = {
             "form": AccountSetForm(),
             "star_score": 50.00,
-            "star_score_posi": 40,
+            "star_score_pos": 40,
             "issue_score": 50.00,
-            "issue_score_posi": 40,
+            "issue_score_pos": 40,
             "pr_score": 50.0,
-            "pr_score_posi": 40,
+            "pr_score_pos": 40,
             "data": [50 for _ in range(12)],
             "profile_img": "../../static/userpage/media/default_profile_img.png",
         }
+        self.user_infos = defaultdict(int)
 
     def get(self, request, *args, **kwargs):
         """ Inherit method from View """
@@ -36,13 +39,44 @@ class Index(View):
         if form.is_valid():
             username = data["username"]
 
-            # TODO: リクエストの並列化
-            profile_img = self.fetch_profile_img(username)
-            elapsed_days = self._calc_elapsed_days(username)
-            repo_infos = self.get_repositories(username)
-            star_score = self.calc_star_score(username, elapsed_days)
-            issue_score = self.calc_issue_score(username, elapsed_days)
-            pull_request_score = self.calc_pull_request_score(username)
+            profile_img_thread = threading.Thread(
+                target=self.fetch_profile_img, args=(username,)
+            )
+            elapsed_days_thread = threading.Thread(
+                target=self._calc_elapsed_days, args=(username,)
+            )
+            repo_infos_thread = threading.Thread(
+                target=self.get_repositories, args=(username,)
+            )
+            star_score_thread = threading.Thread(
+                target=self.calc_star_score,
+                args=(username, self.user_infos["elapsed_days"]),
+            )
+            issue_score_thread = threading.Thread(
+                target=self.calc_issue_score,
+                args=(username, self.user_infos["elapsed_days"]),
+            )
+            pull_request_score_thread = threading.Thread(
+                target=self.calc_pull_request_score, args=(username,)
+            )
+
+            elapsed_days_thread.start()
+            profile_img_thread.start()
+            repo_infos_thread.start()
+            pull_request_score_thread.start()
+
+            # elapsed_day is necessary to run star_score_thread and issue_score_thread
+            elapsed_days_thread.join()
+
+            star_score_thread.start()
+            issue_score_thread.start()
+
+            profile_img_thread.join()
+            repo_infos_thread.join()
+            star_score_thread.join()
+            issue_score_thread.join()
+            pull_request_score_thread.join()
+
             # Mock data
             score_data = [35, 35, 40, 46, 52, 54, 60, 70, 70, 70, 70, 71]
             score_data[-1] = self.user_infos["issue_score"]
@@ -50,15 +84,15 @@ class Index(View):
             context = {
                 "form": form,
                 "username": username,
-                "repo_infos": repo_infos,
-                "star_score": star_score,
-                "star_score_posi": star_score - 13.00,
-                "issue_score": issue_score,
-                "issue_score_posi": issue_score - 13.00,
-                "pr_score": pull_request_score,
-                "pr_score_posi": pull_request_score - 13.00,
-                "profile_img": profile_img,
+                "repo_infos": self.user_infos["repo_infos"],
+                "star_score": self.user_infos["star_score"],
+                "star_score_pos": self.user_infos["star_score"] - 13.00,
+                "issue_score": self.user_infos["issue_score"],
+                "issue_score_pos": self.user_infos["issue_score"] - 13.00,
+                "pr_score": self.user_infos["pull_request_score"],
+                "pr_score_pos": self.user_infos["pull_request_score"] - 13.00,
                 "data": score_data,
+                "profile_img": self.user_infos["profile_img"],
             }
 
             return render(request, "userpage/index.html", context)
@@ -69,9 +103,9 @@ class Index(View):
         query = "{ user(login:" + f'"{username}"' + ") { avatarUrl }}"
         avatar_url = self.api.post_graphql(query)["data"]["user"]["avatarUrl"]
 
-        return avatar_url
+        self.user_infos["profile_img"] = avatar_url
 
-    def get_repositories(self, username: str) -> List[Dict[str, Any]]:
+    def get_repositories(self, username: str):
         data: List[Dict[str, Any]] = self.api.get_rest(
             f"users/{username}/repos?per_page=500"
         )
@@ -94,9 +128,9 @@ class Index(View):
                     }
                 )
 
-        return repo_infos
+        self.user_infos["repo_infos"] = repo_infos
 
-    def _calc_elapsed_days(self, username: str) -> int:
+    def _calc_elapsed_days(self, username: str):
         user_info: Dict[str, Any] = self.api.get_rest(f"users/{username}")
 
         account_created_at = datetime.strptime(
@@ -107,8 +141,7 @@ class Index(View):
         )
 
         elapsed_days = (last_updated_at - account_created_at).days
-
-        return elapsed_days
+        self.user_infos["elapsed_days"] = elapsed_days
 
     def _calc_star_count(self, username: str) -> int:
         query = (
@@ -143,27 +176,27 @@ class Index(View):
 
         return self.calc_deviation_value(star_per_day_biased, mean=mean, stdev=stdev)
 
-    def calc_star_score(self, username: str, elapsed_days: int) -> float:
+    def calc_star_score(self, username: str, elapsed_days: int):
         """
         Calculate Deviation value
         """
         star_count = self._calc_star_count(username)
 
-        return self.calc_biased_deviation_value(
+        self.user_infos["star_score"] = self.calc_biased_deviation_value(
             star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days
         )
 
-    def calc_issue_score(self, username: str, elapsed_days: int) -> float:
+    def calc_issue_score(self, username: str, elapsed_days: int):
         """
         Calculate Deviation value
         """
         issue_count = self._fetch_issue_count(username)
 
-        return self.calc_biased_deviation_value(
+        self.user_infos["issue_score"] = self.calc_biased_deviation_value(
             issue_count, mean=0.01043, stdev=0.04264, elapsed_days=elapsed_days
         )
 
-    def calc_pull_request_score(self, username: str) -> float:
+    def calc_pull_request_score(self, username: str):
         query = (
             '{ user(login: "'
             + username
@@ -212,4 +245,4 @@ class Index(View):
         else:
             score = self.calc_deviation_value(merged_ratio, mean=0.869, stdev=0.104)
 
-        return score
+        self.user_infos["pull_request_score"] = score
