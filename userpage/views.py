@@ -16,16 +16,16 @@ class Index(View):
         self.api = GitHubAPI()
         self.default_context = {
             "form": AccountSetForm(),
-            "star_score": 50.00,
+            "star_score": 50.0,
             "star_score_pos": 40,
-            "issue_score": 50.00,
+            "issue_score": 50.0,
             "issue_score_pos": 40,
             "pr_score": 50.0,
             "pr_score_pos": 40,
             "data": [50 for _ in range(12)],
             "profile_img": "../../static/userpage/media/default_profile_img.png",
         }
-        self.user_infos = defaultdict(int)
+        self.user_infos = defaultdict(float)
 
     def get(self, request, *args, **kwargs):
         """ Inherit method from View """
