@@ -9,6 +9,9 @@
             href="{% static 'userpage/css/index.css' %}"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script type="text/javascript">
+        let data = {{ data }}
+    </script>
     <script
             type="text/javascript"
             src="{% static 'userpage/js/transition_graph.js' %}"
@@ -79,7 +82,7 @@
             </div>
         </div>
         <div id="graph-area">
-          <canvas id="score-transition"></canvas>
+            <canvas id="score-transition"></canvas>
         </div>
     </div>
     <div id="repository-block">

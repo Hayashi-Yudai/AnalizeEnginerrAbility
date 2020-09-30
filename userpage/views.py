@@ -20,6 +20,7 @@ class Index(View):
             "issue_score_posi": 40,
             "pr_score": 50.0,
             "pr_score_posi": 40,
+            "data": [50 for _ in range(12)],
             "profile_img": "../../static/userpage/media/default_profile_img.png",
         }
 
@@ -42,6 +43,9 @@ class Index(View):
             star_score = self.calc_star_score(username, elapsed_days)
             issue_score = self.calc_issue_score(username, elapsed_days)
             pull_request_score = self.calc_pull_request_score(username)
+            # Mock data
+            score_data = [35, 35, 40, 46, 52, 54, 60, 70, 70, 70, 70, 71]
+            score_data[-1] = self.user_infos["issue_score"]
 
             context = {
                 "form": form,
@@ -54,6 +58,7 @@ class Index(View):
                 "pr_score": pull_request_score,
                 "pr_score_posi": pull_request_score - 13.00,
                 "profile_img": profile_img,
+                "data": score_data,
             }
 
             return render(request, "userpage/index.html", context)
