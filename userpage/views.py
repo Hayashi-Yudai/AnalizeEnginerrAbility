@@ -186,7 +186,7 @@ class Index(View):
         if star_count == 0:
             self.user_infos["star_score"] = 0.0
 
-        bias = 1000 if elapsed_days < 1000 else 0
+        bias = 1000 if elapsed_days < 1000 else 1000 - elapsed_days
         star_per_day_norm = star_count / (elapsed_days + bias) / 3.0
         if star_per_day_norm >= 1:
             self.user_infos["star_score"] = 100.0
