@@ -74,7 +74,13 @@ div#score-summary {
 }
 
 div#score-area {
-    margin: 10px 10% 10px 0;
+    margin: 15px 10% 10px 0;
+}
+
+p.score-title {
+    font-family: "M PLUS 1p";
+    font-weight: 500;
+    color: #616161
 }
 
 progress {
