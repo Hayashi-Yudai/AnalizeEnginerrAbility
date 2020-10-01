@@ -185,11 +185,13 @@ class Index(View):
 
         if star_count == 0:
             self.user_infos["star_score"] = 0.0
+            return None
 
         bias = 1000 if elapsed_days < 1000 else 1000 - elapsed_days
         star_per_day_norm = star_count / (elapsed_days + bias) / 3.0
         if star_per_day_norm >= 1:
             self.user_infos["star_score"] = 100.0
+            return None
 
         logit = np.log10(star_per_day_norm / (1 - star_per_day_norm))
 
@@ -211,9 +213,22 @@ class Index(View):
         Calculate Deviation value
         """
         issue_count = self._fetch_issue_count(username)
+        bias = 1000 if elapsed_days < 1000 else 1000 - elapsed_days
+        issue_per_day = issue_count / (elapsed_days + bias)
 
-        self.user_infos["issue_score"] = self.calc_biased_deviation_value(
-            issue_count, mean=0.01043, stdev=0.04264, elapsed_days=elapsed_days
+        if issue_per_day >= 1:
+            self.user_infos["issue_score"] = 100.0
+            return None
+        if issue_per_day == 0:
+            self.user_infos["issue_score"] = 0.0
+            return None
+
+        logit = np.log10(issue_per_day / (1 - issue_per_day))
+
+        self.user_infos["issue_score"] = self.calc_deviation_value(
+            logit,
+            mean=-2.377,
+            stdev=0.7849,
         )
 
     def calc_pull_request_score(self, username: str):
