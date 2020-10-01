@@ -23,7 +23,9 @@ class Index(View):
             "issue_score_pos": 40,
             "pr_score": 50.0,
             "pr_score_pos": 40,
-            "data": [50 for _ in range(12)],
+            "star_scores": [50 for _ in range(12)],
+            "issue_scores": [50 for _ in range(12)],
+            "pull_request_scores": [50 for _ in range(12)],
             "profile_img": "../../static/userpage/media/default_profile_img.png",
         }
         self.user_infos = defaultdict(float)
