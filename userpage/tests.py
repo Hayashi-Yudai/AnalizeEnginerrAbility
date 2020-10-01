@@ -98,6 +98,79 @@ def test_calc_elapsed_days(monkeypatch):
     assert user_infos["elapsed_days"] == 2
 
 
+@pytest.mark.parametrize(
+    "star_cnt,elapsed_days,expected",
+    [
+        (0, 1000, 0),  # has no stars
+        (5000, 1000, 100),  # has a lot of stars
+    ],
+)
+def test_calc_star_score(monkeypatch, star_cnt, expected, elapsed_days):
+    def mock_post_graphql(self, query):
+        return {"user": {"starredRepositories": {"totalCount": star_cnt}}}
+
+    monkeypatch.setattr(GitHubAPI, "post_graphql", mock_post_graphql)
+
+    view = Index()
+    view.calc_star_score("test-user", elapsed_days)
+
+    assert view.user_infos["star_score"] == expected
+
+
+@pytest.mark.parametrize(
+    "issue_cnt,elapsed_days,expected",
+    [
+        (0, 1000, 0),  # has no issues
+        (5000, 1000, 100),  # has a lot of issues
+    ],
+)
+def test_calc_issue_score(monkeypatch, issue_cnt, expected, elapsed_days):
+    def mock_post_graphql(self, query):
+        return {"user": {"issues": {"totalCount": issue_cnt}}}
+
+    monkeypatch.setattr(GitHubAPI, "post_graphql", mock_post_graphql)
+
+    view = Index()
+    view.calc_issue_score("test-user", elapsed_days)
+
+    assert view.user_infos["issue_score"] == expected
+
+
+def test_calc_pull_request_score(monkeypatch):
+    def mock_post_graphql(self, query):
+        return {
+            "user": {
+                "pullRequests": {
+                    "totalCount": 10,
+                    "nodes": [
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": False,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user-2"},
+                        },
+                    ],
+                }
+            }
+        }
+
+    monkeypatch.setattr(GitHubAPI, "post_graphql", mock_post_graphql)
+
+    view = Index()
+    view.calc_pull_request_score("test-user")
+
+    assert view.user_infos["pull_request_score"] > 0
+
+
 # API test
 def test_github_api_attributes():
     api = GitHubAPI()

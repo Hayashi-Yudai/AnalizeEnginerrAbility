@@ -103,8 +103,7 @@ class Index(View):
         pull_request_score_thread.join()
 
     def fetch_profile_img(self, username):
-        query = "{ user(login:" + f'"{username}"' + ") { avatarUrl }}"
-        avatar_url = self.api.post_graphql(query)["data"]["user"]["avatarUrl"]
+        avatar_url = self.api.fetch_avatar_url(username)["user"]["avatarUrl"]
 
         self.user_infos["profile_img"] = avatar_url
 
@@ -147,22 +146,16 @@ class Index(View):
         self.user_infos["elapsed_days"] = elapsed_days
 
     def _fetch_star_count(self, username: str) -> int:
-        query = (
-            "{ user(login:"
-            + f'"{username}"'
-            + ") { starredRepositories { totalCount } } }"
-        )
-        star_count = self.api.post_graphql(query)["data"]["user"][
-            "starredRepositories"
-        ]["totalCount"]
+        star_count = self.api.fetch_star_count(username)["user"]["starredRepositories"][
+            "totalCount"
+        ]
 
         return star_count
 
     def _fetch_issue_count(self, username: str) -> int:
-        query = '{ user(login: "' + username + '") { issues(first:10) { totalCount }}}'
-        response = self.api.post_graphql(query)
+        response = self.api.fetch_issue_count(username)
 
-        return response["data"]["user"]["issues"]["totalCount"]
+        return response["user"]["issues"]["totalCount"]
 
     @staticmethod
     def calc_deviation_value(val: float, mean: float, stdev: float) -> float:
@@ -226,28 +219,7 @@ class Index(View):
         )
 
     def calc_pull_request_score(self, username: str):
-        query = (
-            '{ user(login: "'
-            + username
-            + '") {'
-            + """
-            pullRequests(last: 100, orderBy:{direction: DESC, field:CREATED_AT}) {
-                totalCount
-                nodes {
-                    merged
-                    author {
-                        login
-                    }
-                    mergedBy {
-                        login
-                    }
-                }
-            }
-        }
-    }
-            """
-        )
-        response: Dict[str, Any] = self.api.post_graphql(query)["data"]["user"]
+        response: Dict[str, Any] = self.api.fetch_pull_request_infos(username)["user"]
         if response is None:
             return 0
 

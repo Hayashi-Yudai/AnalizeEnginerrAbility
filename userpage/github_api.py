@@ -84,4 +84,47 @@ class GitHubAPI:
         if response.status_code != 200:
             return dict()
 
-        return response.json()
+        return response.json()["data"]
+
+    def fetch_avatar_url(self, username: str) -> Dict[str, Any]:
+        query = "{ user(login:" + f'"{username}"' + ") { avatarUrl }}"
+
+        return self.post_graphql(query)
+
+    def fetch_star_count(self, username: str) -> Dict[str, Any]:
+        query = (
+            "{ user(login:"
+            + f'"{username}"'
+            + ") { starredRepositories { totalCount } } }"
+        )
+        return self.post_graphql(query)
+
+    def fetch_issue_count(self, username: str) -> Dict[str, Any]:
+        query = '{ user(login: "' + username + '") { issues(first:10) { totalCount }}}'
+
+        return self.post_graphql(query)
+
+    def fetch_pull_request_infos(self, username) -> Dict[str, Any]:
+        query = (
+            '{ user(login: "'
+            + username
+            + '") {'
+            + """
+                pullRequests(last: 100, orderBy:{direction: DESC, field:CREATED_AT}) {
+                    totalCount
+                    nodes {
+                        merged
+                        author {
+                            login
+                        }
+                        mergedBy {
+                            login
+                        }
+                    }
+                }
+            }
+        }
+                """
+        )
+
+        return self.post_graphql(query)
