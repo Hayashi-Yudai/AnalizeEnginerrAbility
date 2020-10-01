@@ -42,8 +42,12 @@ class Index(View):
             self.run_request_threads(username)
 
             # Mock data
-            score_data = [35, 35, 40, 46, 52, 54, 60, 70, 70, 70, 70, 71]
-            score_data[-1] = self.user_infos["issue_score"]
+            star_scores = [65, 70, 70, 70, 70, 72, 70, 70, 70, 70, 70, 71]
+            issue_scores = [35, 35, 40, 46, 52, 54, 60, 70, 70, 70, 70, 71]
+            pull_request_scores = [25, 32, 32, 36, 44, 44, 46, 45, 56, 59, 60, 71]
+            star_scores[-1] = self.user_infos["star_score"]
+            issue_scores[-1] = self.user_infos["issue_score"]
+            pull_request_scores[-1] = self.user_infos["pull_request_score"]
 
             context = {
                 "form": form,
@@ -55,7 +59,9 @@ class Index(View):
                 "issue_score_pos": max(self.user_infos["issue_score"] - 13.00, 1),
                 "pr_score": self.user_infos["pull_request_score"],
                 "pr_score_pos": max(self.user_infos["pull_request_score"] - 13.00, 1),
-                "data": score_data,
+                "star_scores": star_scores,
+                "issue_scores": issue_scores,
+                "pull_request_scores": pull_request_scores,
                 "profile_img": self.user_infos["profile_img"],
             }
 
