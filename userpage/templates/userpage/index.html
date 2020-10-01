@@ -10,7 +10,8 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script type="text/javascript">
-        let data = {{ data }}
+        let data =
+        {{ data }}
     </script>
     <script
             type="text/javascript"
@@ -28,13 +29,6 @@
             >
         </div>
         <div id="header-icon">
-            <!--
-          <img
-            src="{% static 'userpage/media/profile_img.jpg' %}"
-            alt="profile image"
-            height="100%"
-          />
-          -->
             <img src="{{ profile_img }}" alt="profile image" height="100%"/>
         </div>
     </div>
