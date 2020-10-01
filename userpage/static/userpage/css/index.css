@@ -40,7 +40,7 @@ html {
 a.account-button {
     display: block;
     background: 0;
-    width: 6rem;
+    width: 6.5rem;
     border: 2px solid #e3e3e3;
     color: #cccccc;
     padding: 10px;
@@ -178,6 +178,7 @@ div.card-description {
 
 div.card-upper {
     display: inline-flex;
+    width: 100%;
 }
 
 div.star {
