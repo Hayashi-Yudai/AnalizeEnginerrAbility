@@ -1,16 +1,16 @@
 <!-- GitHubアカウントの設定のためのポップアップ画面 -->
 <div id="popup1" class="overlay">
-  <div class="popup">
-    <h2 id="setting-title">Account Setting</h2>
-    <form method="post">
-      {% csrf_token %} {{ form.username }}
-      <div class="button-area">
-        <label class="setting-button ok">
-          OK
-          <input type="submit" style="display: none" />
-        </label>
-        <a type="button" href="#" class="setting-button cancel">Cancel</a>
-      </div>
-    </form>
-  </div>
+    <div class="popup">
+        <h2 id="setting-title">Account Setting</h2>
+        <form method="post">
+            {% csrf_token %} {{ form.username }}
+            <div class="button-area">
+                <label class="setting-button ok">
+                    OK
+                    <input type="submit" style="display: none"/>
+                </label>
+                <a type="button" href="#" class="setting-button cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
