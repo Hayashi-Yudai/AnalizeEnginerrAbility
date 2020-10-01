@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 from django.shortcuts import render
 from django.views import View
+import numpy as np
 import threading
 from typing import List, Dict, Any
 
@@ -182,9 +183,28 @@ class Index(View):
         """
         star_count = self._fetch_star_count(username)
 
-        self.user_infos["star_score"] = self.calc_biased_deviation_value(
-            star_count, mean=0.02862, stdev=0.1257, elapsed_days=elapsed_days
-        )
+        if star_count == 0:
+            self.user_infos["star_score"] = 0.0
+
+        bias = 1000 if elapsed_days < 1000 else 0
+        star_per_day_norm = star_count / (elapsed_days + bias) / 3.0
+        if star_per_day_norm >= 1:
+            self.user_infos["star_score"] = 100.0
+
+        logit = np.log10(star_per_day_norm / (1 - star_per_day_norm))
+
+        if elapsed_days > 4100:
+            self.user_infos["star_score"] = self.calc_deviation_value(
+                logit,
+                mean=-2.447,
+                stdev=0.8237,
+            )
+        else:
+            self.user_infos["star_score"] = self.calc_deviation_value(
+                logit,
+                mean=-3.405,
+                stdev=0.6361,
+            )
 
     def calc_issue_score(self, username: str, elapsed_days: int):
         """
