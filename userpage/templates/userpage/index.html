@@ -10,6 +10,7 @@
             type="text/css"
             href="{% static 'userpage/css/index.css' %}"
     />
+    <script type="text/javascript" src="{% static 'userpage/js/manage_popup.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script type="text/javascript">
         let star_scores = {{ star_scores }};
@@ -27,9 +28,9 @@
     <div id="header">
         <div id="title-header"><h1>SignPost</h1></div>
         <div id="account-setting">
-            <a type="button" class="account-button" href="#popup1"
-            >Account Setting</a
-            >
+            <a type="button" class="account-button" onclick="popup_appear()">
+                Account Setting
+            </a>
         </div>
         <div id="header-icon">
             <img src="{{ profile_img }}" alt="profile image" height="100%"/>

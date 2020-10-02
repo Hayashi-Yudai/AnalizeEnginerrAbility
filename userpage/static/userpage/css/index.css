@@ -52,6 +52,7 @@ a.account-button {
 a.account-button:hover {
     border-color: salmon;
     color: salmon;
+    cursor: pointer;
 }
 
 a.account-button:focus {
@@ -212,11 +213,6 @@ p.star-num {
     transition: opacity 150ms;
     visibility: hidden;
     opacity: 0;
-}
-
-.overlay:target {
-    visibility: visible;
-    opacity: 1;
 }
 
 h2#setting-title {
