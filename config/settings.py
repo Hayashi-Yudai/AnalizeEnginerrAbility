@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "signup.apps.SignupConfig",
     "userpage.apps.UserpageConfig",
     "django.contrib.admin",
     "django.contrib.auth",
