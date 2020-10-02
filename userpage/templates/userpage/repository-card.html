@@ -3,23 +3,38 @@
     {% for repo in repo_infos %}
         <li class="card-item">
             <div class="card">
-                <div class="card-upper">
-                    <div class="card-title">{{ repo.name }}</div>
-                    <div class="star">
-                        <p>
-                            <img src="{% static 'userpage/media/star.svg' %}" width="20px"/>
-                        </p>
-                        <p class="star-num">{{ repo.star_cnt }}</p>
+                <input type="checkbox" id="check-{{ repo.name }}" style="display:none;">
+                <label for="check-{{ repo.name }}">
+                    <span class="card-upper">
+                        <span class="card-title">
+                            {{ repo.name }}
+                        </span>
+                        <span class="star">
+                            <span>
+                                <img src="{% static 'userpage/media/star.svg' %}" width="20px" alt="star icon"/>
+                            </span>
+                            <span class="star-num">{{ repo.star_cnt }}</span>
+                        </span>
+                        <span class="star">
+                            <span>
+                                <img src="{% static 'userpage/media/fork.png' %}" width="22px" alt="fork icon"/>
+                            </span>
+                            <span class="star-num">{{ repo.fork_cnt }}</span>
+                        </span>
+                    </span>
+                    <span class="card-description">
+                        {{ repo.description|truncatechars_html:50 }}
+                    </span>
+                </label>
+                <div class="scores-in-card">
+                    <div style="padding-top: 10px;display: inline-flex;">
+                        <div class="repository-graph">
+                            <canvas id="repo-issue" height="400" width="500"></canvas>
+                        </div>
+                        <div class="repository-graph">
+                            <canvas id="repo-pull-request" height="400" width="500"></canvas>
+                        </div>
                     </div>
-                    <div class="star">
-                        <p>
-                            <img src="{% static 'userpage/media/fork.png' %}" width="22px"/>
-                        </p>
-                        <p class="star-num">{{ repo.fork_cnt }}</p>
-                    </div>
-                </div>
-                <div class="card-description">
-                    {{ repo.description|truncatechars_html:50 }}
                 </div>
             </div>
         </li>
