@@ -141,7 +141,7 @@ def test_calc_issue_score(monkeypatch, issue_cnt, expected, elapsed_days):
     assert view.user_infos["issue_score"] == expected
 
 
-def test_calc_pull_request_score(monkeypatch):
+def test_calc_pull_request_score_with_low_own_merge_ratio(monkeypatch):
     def mock_post_graphql(self, query):
         return {
             "user": {
@@ -174,6 +174,51 @@ def test_calc_pull_request_score(monkeypatch):
     view.calc_pull_request_score("test-user")
 
     assert view.user_infos["pull_request_score"] == 36.96
+
+
+def test_calc_pull_request_score_with_high_own_merge_ratio(monkeypatch):
+    def mock_post_graphql(self, query):
+        return {
+            "user": {
+                "pullRequests": {
+                    "totalCount": 5,
+                    "nodes": [
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": False,
+                            "mergedBy": {"login": "test-user-2"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                        {
+                            "merged": True,
+                            "mergedBy": {"login": "test-user"},
+                            "author": {"login": "test-user"},
+                        },
+                    ],
+                }
+            }
+        }
+
+    monkeypatch.setattr(GitHubAPI, "post_graphql", mock_post_graphql)
+
+    view = Index()
+    view.calc_pull_request_score("test-user")
+
+    assert view.user_infos["pull_request_score"] == 30.54
 
 
 # API test
