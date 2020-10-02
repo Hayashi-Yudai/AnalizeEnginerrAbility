@@ -16,32 +16,41 @@ GitHub 上でのユーザーの活動状況からエンジニアの能力を評�
 
 - Python (Python 3.8, Django 3.1)
 - JavaScript (Chart.js)
-- SQLite or PostgreSQL
 
 
-## 実装
+## Implementation
 
 ユーザーは自身の GitHub のユーザー名を登録するだけで能力の分析をすることができる。ユーザーの能力は全体のスコアとして表示され、その推移も確認することができる。また、ユーザーはリポジトリごとの評価も確認することができる。
 
 概要で示した３つの能力は以下の指標を使うことによって数値化する。
 
 - 課題発見力：Issue の量
-- コーディング力：Issue に紐付いている Pull Request の量
-- サーチ力：他人のリポジトリに対するスター・フォークの数
+- コーディング力：Pull Request を出して、それがどれだけマージされているか
+- サーチ力：他人のリポジトリに対するスターの数
 
 
 ## Run the application
 
-- pipenv を使う場合
+このアプリケーションでは依存パッケージの管理に Pipenv を用いている。
+
+アプリケーションを動かすためにいくつかの環境変数を設定する必要がある。アプリケーションのルートディレクトリに `.env` ファイルを作成し、下の３つの環境変数を設定する.
+
+```
+SECRET_KEY=$(適当な文字列で良い)
+API_USERNAME=$YOUR_GITHUB_USERNAME
+API_TOKEN=$GITHUB_API_TOKEN
+```
 
 ```
 $ pipenv install  # 依存パッケージのインストール
-$ pipenv run python manage.py runserver
+$ pipenv run server
 ```
 
-GitHub API を使ってリポジトリ情報を取得するために、いくつかの環境変数を設定する必要がある。
+## Run tests
+
+pytest を使ったテストを実行する。
 
 ```
-API_USERNAME=$YOUR_GITHUB_USERNAME
-API_TOKEN=$GITHUB_API_TOKEN
+$ pipenv install --dev  # development 用パッケージのインストール
+$ pipenv run test
 ```
