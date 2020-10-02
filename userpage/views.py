@@ -168,7 +168,7 @@ class Index(View):
     @staticmethod
     def calc_deviation_value(val: float, mean: float, stdev: float) -> float:
         dev_val = (val - mean) / stdev * 10 + 50
-        dev_val = int(dev_val * 100) / 100
+        dev_val = round(dev_val * 100) / 100
 
         return min(dev_val, 100)
 
@@ -182,7 +182,7 @@ class Index(View):
             self.user_infos["star_score"] = 0.0
             return None
 
-        bias = 1000 if elapsed_days < 1000 else 1000 - elapsed_days
+        bias = 1000 - elapsed_days if elapsed_days < 1000 else 0
         star_per_day_norm = star_count / (elapsed_days + bias) / 3.0
         if star_per_day_norm >= 1:
             self.user_infos["star_score"] = 100.0
@@ -208,7 +208,7 @@ class Index(View):
         Calculate deviation value as score
         """
         issue_count = self._fetch_issue_count(username)
-        bias = 1000 if elapsed_days < 1000 else 1000 - elapsed_days
+        bias = 1000 - elapsed_days if elapsed_days < 1000 else 0
         issue_per_day = issue_count / (elapsed_days + bias)
 
         if issue_per_day >= 1:
