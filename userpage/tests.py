@@ -146,7 +146,7 @@ def test_calc_pull_request_score(monkeypatch):
         return {
             "user": {
                 "pullRequests": {
-                    "totalCount": 10,
+                    "totalCount": 3,
                     "nodes": [
                         {
                             "merged": True,
@@ -173,7 +173,7 @@ def test_calc_pull_request_score(monkeypatch):
     view = Index()
     view.calc_pull_request_score("test-user")
 
-    assert view.user_infos["pull_request_score"] > 0
+    assert view.user_infos["pull_request_score"] == 36.96
 
 
 # API test

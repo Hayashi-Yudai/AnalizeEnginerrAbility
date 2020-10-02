@@ -240,12 +240,11 @@ class Index(View):
         for pr in pull_requests:
             if pr["merged"]:
                 merged_pr_num += 1
-
-            if (
-                pr["mergedBy"] is not None
-                and pr["author"]["login"] == pr["mergedBy"]["login"]
-            ):
-                own_pr_num += 1
+                if (
+                    pr["mergedBy"] is not None
+                    and pr["author"]["login"] == pr["mergedBy"]["login"]
+                ):
+                    own_pr_num += 1
 
         own_pr_ratio = own_pr_num / (merged_pr_num + 1)
         merged_ratio = merged_pr_num / (pull_request_num + 1)
