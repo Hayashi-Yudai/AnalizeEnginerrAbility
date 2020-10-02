@@ -1,36 +1,42 @@
+{% load static %}
 <html lang="ja">
-    <head>
-        <meta charset="urf-8">
-        <title>Signup | SignPost</title>
-    </head>
-    <body>
-        Hello Signup
+<head>
+    <meta charset="urf-8">
+    <title>Signup | SignPost</title>
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'signup/css/index.css' %}"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="container">
+    <div class="wrapper">
+        <div id="box">
+            <div id="title-header"><h1>SignPost</h1></div>
+            <h3>Please sign up</h3>
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                {{ form.username }}
+                {{ form.password1 }}
+                {{ form.password2 }}
 
-        <form method="post" action="{% url 'signup' %}">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td>{{ form.username.label_tag }}</td>
-                    <td>{{ form.username }}</td>
-                </tr>
-                <tr>
-                    <td>{{ form.password1.label_tag }}</td>
-                    <td>{{ form.password1 }}</td>
-                </tr>
-                <tr>
-                    <td>{{ form.password2.label_tag }}</td>
-                    <td>{{ form.password2 }}</td>
-                </tr>
-            </table>
-            <input type="submit" value="Sign Up"/>
-
-            {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <p>{{ error }}</p>
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            {% endif %}
-        </form>
-    </body>
+                {% endif %}
+                <input id="submit-user-info" onclick="this.style.backgroundColor = '#69c061';" type="submit" value="Sign Up"/>
+            </form>
+
+            <div class="signup">
+                <p>a member ? <a href="#">login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
