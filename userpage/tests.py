@@ -103,6 +103,7 @@ def test_calc_elapsed_days(monkeypatch):
     [
         (0, 1000, 0),  # has no stars
         (5000, 1000, 100),  # has a lot of stars
+        (30, 100, 72.16),  # non-zero bias due to elapsed_days < 1000
         (30, 1000, 72.16),  # elapsed_days < 4100
         (30, 5000, 46.95),  # elapsed_days >= 4100
     ],
@@ -124,6 +125,8 @@ def test_calc_star_score(monkeypatch, star_cnt, expected, elapsed_days):
     [
         (0, 1000, 0),  # has no issues
         (5000, 1000, 100),  # has a lot of issues
+        (10, 100, 54.86),  # non-zero bias due to elapsed_days < 1000
+        (10, 1000, 54.86),  # zero bias
     ],
 )
 def test_calc_issue_score(monkeypatch, issue_cnt, expected, elapsed_days):
